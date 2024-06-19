@@ -3,6 +3,7 @@
 #include "../MyQueue.h"
 #include "../Vec2.h"
 
+class Projectile;
 class Enemy;
 
 class Controller
@@ -13,11 +14,14 @@ public:
 
     void Update(float DeltaTime);
     
-    Queue* GetEnemies() const { return m_Entities; }
-    void AddEnemy(Entity* _newEnemy) { m_Entities->enqueue(_newEnemy); }
+    Queue<Enemy>* GetEnemies() const { return m_Entities; }
+    void AddEnemy(Enemy* _newEnemy) { m_Entities->enqueue(_newEnemy); }
+    void AddProjectile(Projectile* _newEnemy) { m_Projectiles->enqueue(_newEnemy); }
 
 private:
-    Queue* m_Entities;
+    Queue<Enemy>* m_Entities;
+    Queue<Projectile>* m_Projectiles;
+    
     vec2* m_InputVector;
 
     // defaul variables for controller movement input

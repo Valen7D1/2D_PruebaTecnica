@@ -251,7 +251,6 @@
     </ClCompile>
     <ClCompile Include="..\src\Font.cpp" />
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\MyQueue.cpp" />
     <ClCompile Include="..\src\World.cpp" />
     <ClCompile Include="..\src\utils.cpp" />
     <ClCompile Include="..\src\Vec2.cpp" />

@@ -5,7 +5,15 @@
 #include "movement.h"
 #include "Sprite.h"
 #include "../World.h"
+#include <random>
 
+
+float GenerateRandomFloat(float min, float max) {
+    std::random_device rd;  // Seed generator
+    std::mt19937 gen(rd()); // Mersenne Twister engine
+    std::uniform_real_distribution<float> dis(min, max);
+    return dis(gen);
+}
 
 Entity::~Entity()
 {
@@ -50,12 +58,12 @@ Projectile::~Projectile()
 void Projectile::Update(float DeltaTime)
 {
     World* Manager = World::GetWorld();
-    Queue* EnemyQueue = Manager->EnemyController->GetEnemies();
+    Queue<Enemy>* EnemyQueue = Manager->EnemyController->GetEnemies();
     
-    QueueNode* CurrentNode = EnemyQueue->getHead();
+    QueueNode<Enemy>* CurrentNode = EnemyQueue->getHead();
     while (CurrentNode != nullptr)
     {
-        QueueNode* NextNode = CurrentNode->next;
+        QueueNode<Enemy>* NextNode = CurrentNode->next;
         if (!CurrentNode->data->HasCollided()) // if enemy hasn't already collided with smth
         {
             m_Collider->collides(CurrentNode->data->GetCollider());
@@ -79,12 +87,13 @@ Player::Player()
     m_Sprite = new Sprite(PlayerTex, m_Data, 1, 1, 1, Color::White());
     m_Collider = Collider::CreateCollider(COLLISION_RECT, PlayerTex, m_Data);
     m_Movement = new PlayerMovement(this, m_Data);
-    m_ProjectileQueue = new Queue();
+    m_Projectiles = new Queue<Projectile>();
 }
 
 Player::~Player()
 {
     delete m_Movement;
+    delete m_Projectiles;
 }
 
 void Player::Update(float DeltaTime)
@@ -107,20 +116,20 @@ void Player::Update(float DeltaTime)
             vec2 StartingLocation = m_Data->Location;
             StartingLocation.y -= m_Data->Size.y;
             
-            m_ProjectileQueue->enqueue(new Projectile(StartingLocation, vec2(0, -1.f)));
+            m_Projectiles->enqueue(new Projectile(StartingLocation, vec2(0, -1.f)));
             m_ProjectileTimer = m_TimeInBetweenShots;
         }
     }
 
     // projectile queue for optimal performance
-    QueueNode* CurrentNode = m_ProjectileQueue->getHead();
+    QueueNode<Projectile>* CurrentNode = m_Projectiles->getHead();
     while (CurrentNode != nullptr)
     {
-        QueueNode* NextNode = CurrentNode->next;
+        QueueNode<Projectile>* NextNode = CurrentNode->next;
         if (CurrentNode->data->HasCollided()) // projectile has collided so must be destroyed
         {
             delete CurrentNode->data;
-            m_ProjectileQueue->erase(CurrentNode);
+            m_Projectiles->erase(CurrentNode);
             // here create entity of type explosion
         }
         else
@@ -142,13 +151,17 @@ void Player::SetPlayerInput(vec2 _newDir, bool _fireInput)
 
 #pragma region Enemy
 
-Enemy::Enemy(vec2* _inputVector, vec2 _location, vec2 _size)
+Enemy::Enemy(vec2* _inputVector, vec2 _location, Enemy* _nextInLine, bool _canShoot, vec2 _size)
 {
     m_Data = new EData(_location, _size);
     ltex_t* PlayerTex = Sprite::loadImage("Data/rect.png");
     m_Sprite = new Sprite(PlayerTex, m_Data, 1, 1, 1, Color::White());
     m_Collider = Collider::CreateCollider(COLLISION_RECT, PlayerTex, m_Data);
     m_Movement = new EnemyMovement(this, m_Data, _inputVector);
+
+    m_CanShoot = _canShoot;
+    NextInLine = _nextInLine;
+    m_ShootTimer = GenerateRandomFloat(3.f, 10.f);
 }
 
 Enemy::~Enemy()
@@ -158,6 +171,26 @@ Enemy::~Enemy()
 
 void Enemy::Update(float DeltaTime)
 {
+    if (m_CanShoot)
+    {
+        m_Sprite->setColor(Color::Red());
+
+        m_ShootTimer -= DeltaTime;
+        if (m_ShootTimer <= 0.f)
+        {
+            vec2 StartingLocation = m_Data->Location;
+            StartingLocation.y += m_Data->Size.y;
+            m_Projectile = new Projectile(StartingLocation, vec2(0, 1.f));
+            m_ShootTimer = GenerateRandomFloat(6.f, 10.f);
+        }
+        
+    }
+    
+    if (m_Projectile)
+    {
+        m_Projectile->Update(DeltaTime);
+    }
+    
     m_Sprite->update(DeltaTime);
     m_Movement->Update(DeltaTime);
 }

@@ -10,7 +10,6 @@
 void PlayerMovement::Update(float DeltaTime)
 {
     vec2 NewLocation = m_Data->Location + m_Direction * m_Speed * DeltaTime;
-    printf("Input: (%f, %f)\n", m_Direction.x, m_Direction.y);
     const World* Manager = World::GetWorld();
     
     if (NewLocation.x - m_Data->Size.x/2 < 0.f) // collided with left wall

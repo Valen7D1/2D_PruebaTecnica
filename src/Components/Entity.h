@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+
+#include "Sprite.h"
 #include "../Vec2.h"
 #include "../MyQueue.h"
 
@@ -63,7 +65,7 @@ public:
 
 private:
     vec2 m_InputVector = vec2();
-    Queue* m_ProjectileQueue;
+    Queue<Projectile>* m_Projectiles;
 
     bool m_ProjectileInput = false;
     float m_ProjectileTimer = 0.f;
@@ -74,11 +76,20 @@ private:
 class Enemy : public Entity
 {
 public:
-    Enemy(vec2* _inputVector,vec2 _location, vec2 _size = vec2(50.f, 50.f));
+    Enemy(vec2* _inputVector,vec2 _location,  Enemy* NextInLine = nullptr, bool _canShoot = false, vec2 _size = vec2(50.f, 50.f));
     virtual ~Enemy() override;
     virtual void Update(float DeltaTime) override;
+
+    void SetCanShoot(bool _canShoot) { m_CanShoot = _canShoot; }
     
 public:
     Movement* m_Movement = nullptr;
+    Enemy* NextInLine = nullptr;
+
+private:
+    bool m_CanShoot = false;
+    float m_ShootTimer; // random value from range
+
+    Projectile* m_Projectile = nullptr;
     
 };
