@@ -5,6 +5,7 @@ void Queue::enqueue(Entity* e)
     QueueNode* newNode = new QueueNode(e);
     if (tail != nullptr) {
         tail->next = newNode;
+        newNode->previous = tail;
     }
     tail = newNode;
     if (head == nullptr) {

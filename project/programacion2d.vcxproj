@@ -95,6 +95,7 @@
       <AdditionalIncludeDirectories>../lib</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="..\src\Components\controller.cpp" />
     <ClCompile Include="..\src\Components\Entity.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -259,6 +260,7 @@
     <ClInclude Include="..\lib\litegfx.h" />
     <ClInclude Include="..\lib\stb_image.h" />
     <ClInclude Include="..\src\Components\collider.h" />
+    <ClInclude Include="..\src\Components\controller.h" />
     <ClInclude Include="..\src\Components\Entity.h" />
     <ClInclude Include="..\src\Components\movement.h" />
     <ClInclude Include="..\src\Components\sprite.h" />

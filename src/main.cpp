@@ -3,7 +3,7 @@
 #include "Components/Entity.h"
 #include "Components/collider.h"
 #include "World.h"
-#include "Components/camera.h"
+#include "Components/controller.h"
 #include "Components/movement.h"
 
 
@@ -16,14 +16,6 @@ void PlayersInput(GLFWwindow* window)
 	vec2 InputVector = vec2(0.f, 0.f);
 	bool FireInput = false;
 	
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		InputVector.y -= 1.f;
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		InputVector.y += 1.f;
-	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		InputVector.x -= 1.f;
@@ -49,15 +41,14 @@ int main() {
 	glfwInit();
 	
 	World* manager = World::GetWorld();
+	player = manager->MyPlayer;
+	
 	const char* title = "P2_Gonzalo_Valenti";
 	
 	GLFWwindow* window = glfwCreateWindow(static_cast<int>(manager->Width), static_cast<int>(manager->Height), title, nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	lgfx_setup2d(static_cast<int>(manager->Width), static_cast<int>(manager->Height));
 	manager->m_Window = window;
-
-	player = new Player();
-	manager->AddEntity(player);
 	
 	double time = glfwGetTime();
 	while (!glfwWindowShouldClose(window))

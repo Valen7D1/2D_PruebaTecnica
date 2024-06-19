@@ -26,6 +26,8 @@ public:
     void SetSprite(Sprite* _sprite);
     void SetCollider(Collider* _collider);
 
+    bool HasCollided() const;
+
     
 protected:
     Sprite* m_Sprite = nullptr;
@@ -37,15 +39,13 @@ protected:
 class Projectile : public Entity
 {
 public:
-    Projectile(vec2 _location);
+    Projectile(vec2 _location, vec2 _direction);
     virtual ~Projectile() override;
     virtual void Update(float DeltaTime) override;
     
 public:
     Movement* m_Movement = nullptr;
-
-private:
-    vec2 m_InputVector = vec2();
+    
 };
 
 
@@ -74,16 +74,11 @@ private:
 class Enemy : public Entity
 {
 public:
-    Enemy();
+    Enemy(vec2* _inputVector,vec2 _location, vec2 _size = vec2(50.f, 50.f));
     virtual ~Enemy() override;
     virtual void Update(float DeltaTime) override;
     
-    void SetEnemyDirection(vec2 _moveInput);
-    
 public:
     Movement* m_Movement = nullptr;
-
-private:
-    vec2 m_InputVector = vec2();
     
 };

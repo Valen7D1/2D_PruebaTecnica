@@ -25,24 +25,6 @@ Collider* Collider::CreateCollider(CollisionType _type, ltex_t* _tex, EData* _da
 
 #pragma region AllColliders
 
-bool Collider::CheckCollision()
-{
-    World* manager = World::GetWorld();
-    std::vector<Entity*> Entities = manager->GetEntities();
-    
-    for (Entity* Entity : Entities)
-    {
-        if (Entity->GetCollider() != this)
-        {
-            if (Entity->GetCollider()->collides(*this))
-            {
-                return true;
-            }
-        }
-    }
-    
-    return false;
-}
 
 bool Collider::checkCircleCircle(const vec2& pos1, float radius1, const vec2& pos2, float radius2)
 {
@@ -105,9 +87,17 @@ CircleCollider::CircleCollider(EData* _data) : Collider(_data, COLLISION_CIRCLE)
     m_Radius = (Height > Width) ? (Height / 2.0f) : (Width / 2.0f);
 }
 
-bool CircleCollider::collides(Collider& other)
+bool CircleCollider::collides(Collider* other)
 {
-    return other.collides(m_Data->Location, m_Radius);
+    bool const HasCollided = other->collides(m_Data->Location, m_Radius);
+    
+    if(HasCollided)
+    {
+        this->SetHasCollided(HasCollided);
+        other->SetHasCollided(HasCollided);
+    }
+    
+    return HasCollided;
 }
 
 bool CircleCollider::collides(vec2& circlePos, float circleRadius)
@@ -140,10 +130,19 @@ vec2 RectCollider::GetCenteredLocation() const
     return CenteredLocation;
 }
 
-bool RectCollider::collides(Collider& other)
+bool RectCollider::collides(Collider* other)
 {
     m_CenteredLocation = GetCenteredLocation();
-    return other.collides(m_CenteredLocation, m_Data->Size);
+    
+    bool const HasCollided = other->collides(m_CenteredLocation, m_Data->Size);
+
+    if(HasCollided)
+    {
+        this->SetHasCollided(HasCollided);
+        other->SetHasCollided(HasCollided);
+    }
+    
+    return HasCollided;
 }
 
 bool RectCollider::collides(vec2& circlePos, float circleRadius)
@@ -186,7 +185,7 @@ bool PixelsCollider::collides(vec2& pixelsPos, vec2& pixelsSize, uint8_t* pixels
     return false; //checkPixelsPixels();
 }
 
-bool PixelsCollider::collides(Collider& other)
+bool PixelsCollider::collides(Collider* other)
 {
     return false;
 }
