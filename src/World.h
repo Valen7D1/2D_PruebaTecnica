@@ -7,6 +7,7 @@
 #include "Vec2.h"
 
 
+class Barrier;
 class Controller;
 class Player;
 class Camera;
@@ -48,8 +49,10 @@ private:
 
 
 public:
+    // this should be private and have getters and setters
     Player* MyPlayer;
     Controller* EnemyController;
+    Queue<Barrier>* Barriers;
     
     GLFWwindow* m_Window;
     float const Height = 800.f;
@@ -58,6 +61,10 @@ public:
 public:
     static World* GetWorld();
     void Update(float DeltaTime);
+
+private:
+    void Init();
+    void EndGame(bool _hasWon);
 
     
 };

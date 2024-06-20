@@ -7,6 +7,7 @@
 #include "../MyQueue.h"
 
 
+class Controller;
 enum CollisionType : int;
 class Movement;
 class Sprite;
@@ -59,6 +60,7 @@ public:
     virtual void Update(float DeltaTime) override;
     
     void SetPlayerInput(vec2 _moveInput, bool _fireInput);
+    Queue<Projectile>* GetProjectiles() const { return m_Projectiles; }
     
 public:
     Movement* m_Movement = nullptr;
@@ -76,7 +78,7 @@ private:
 class Enemy : public Entity
 {
 public:
-    Enemy(vec2* _inputVector,vec2 _location,  Enemy* NextInLine = nullptr, bool _canShoot = false, vec2 _size = vec2(50.f, 50.f));
+    Enemy(vec2* _inputVector, Controller* _owner, vec2 _location,  Enemy* NextInLine = nullptr, bool _canShoot = false, vec2 _size = vec2(50.f, 50.f));
     virtual ~Enemy() override;
     virtual void Update(float DeltaTime) override;
 
@@ -90,6 +92,18 @@ private:
     bool m_CanShoot = false;
     float m_ShootTimer; // random value from range
 
-    Projectile* m_Projectile = nullptr;
+    Controller* m_Owner;
     
+};
+
+class Barrier : public Entity
+{
+public:
+    Barrier(vec2 _location, vec2 _size);
+    virtual void Update(float DeltaTime) override;
+
+    unsigned int GetHealth() const { return m_Health; }
+private:
+    unsigned int m_Health = 4;
+    std::vector<Color> VisualHealth; // I could find any sprites that i liked so this will do
 };

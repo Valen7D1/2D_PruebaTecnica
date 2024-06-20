@@ -20,6 +20,10 @@ public:
     static Color Black() { return Color(0.0f, 0.0f, 0.0f); }
     static Color Gray() { return Color(0.5f, 0.5f, 0.5f); }
     static Color Red() { return Color(1.f, 0.f, 0.f); }
+    static Color Yellow()   { return Color(1.0f, 1.0f, 0.0f); }
+    static Color Orange()   { return Color(1.0f, 0.5f, 0.0f); }
+    static Color Green()    { return Color(0.0f, 1.0f, 0.0f); }
+
     
     void SetColor();
     

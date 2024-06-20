@@ -8,24 +8,6 @@ Controller::Controller()
     m_Projectiles = new Queue<Projectile>();
     m_Entities = new Queue<Enemy>();
     m_InputVector = new vec2(0.f, 1.f);
-
-    const int rows = 3;
-    const int cols = 4;
-    const float startX = 250.f;
-    const float startY = 50.f;
-    const float xOffset = 100.f;
-    const float yOffset = 100.f;
-    
-    for (int col = 0; col < cols; ++col)
-    {
-        Enemy* NewEnemy = nullptr;
-        for (int row = 0; row < rows; ++row)
-        {
-            NewEnemy = new Enemy(m_InputVector, vec2(startX + xOffset * static_cast<float>(col), startY + yOffset * static_cast<float>(row)), NewEnemy);
-            AddEnemy(NewEnemy);
-        }
-        NewEnemy->SetCanShoot(true);
-    }
 }
 
 Controller::~Controller()
@@ -54,6 +36,24 @@ void Controller::Update(float DeltaTime)
         *m_InputVector = *m_InputVector * m_Input;
     }
     
+
+    // projectile update
+    QueueNode<Projectile>* CurrentProjectile = m_Projectiles->getHead();
+    while (CurrentProjectile != nullptr)
+    {
+        QueueNode<Projectile>* NextProjectile = CurrentProjectile->next;
+        if (CurrentProjectile->data->HasCollided()) // projectile has collided so must be destroyed
+        {
+            delete CurrentProjectile->data;
+            m_Projectiles->erase(CurrentProjectile);
+            // here create entity of type explosion
+        }
+        else
+        {
+            CurrentProjectile->data->Update(DeltaTime);
+        }
+        CurrentProjectile = NextProjectile;
+    }
     
     // enemies update
     QueueNode<Enemy>* CurrentNode = m_Entities->getHead();
@@ -64,7 +64,7 @@ void Controller::Update(float DeltaTime)
         {
             if(CurrentNode->data->NextInLine)
             {
-                CurrentNode->data->NextInLine->SetCanShoot(true);
+                CurrentNode->data->NextInLine->SetCanShoot(true); // set new shooter in line if possible
             }
           
             delete CurrentNode->data;

@@ -15,6 +15,10 @@ public:
     void Update(float DeltaTime);
     
     Queue<Enemy>* GetEnemies() const { return m_Entities; }
+    Queue<Projectile>* GetProjectiles() const { return m_Projectiles; }
+    
+    vec2* GetInputVector() const { return m_InputVector; }
+        
     void AddEnemy(Enemy* _newEnemy) { m_Entities->enqueue(_newEnemy); }
     void AddProjectile(Projectile* _newEnemy) { m_Projectiles->enqueue(_newEnemy); }
 
