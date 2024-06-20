@@ -44,10 +44,9 @@ bool Entity::HasCollided() const
 
 Projectile::Projectile(vec2 _location, vec2 _direction)
 {
-    m_Data = new EData(_location, vec2(25.f, 25.f));
-    ltex_t* ProjectileTex = Sprite::loadImage("data/circle.png");
-    m_Sprite = new Sprite(ProjectileTex, m_Data, 1, 1, 1, Color::White());
-    m_Collider = Collider::CreateCollider(COLLISION_CIRCLE, ProjectileTex, m_Data);
+    m_Data = new EData(_location, vec2(25.f, 50.f));
+    m_Sprite = new Sprite(World::GetWorld()->ProjectileTex, m_Data, 1, 1, 1, Color::White());
+    m_Collider = Collider::CreateCollider(COLLISION_CIRCLE, World::GetWorld()->ProjectileTex, m_Data);
     m_Movement = new ProjectileMovement(this, m_Data, _direction);
 }
 
@@ -87,9 +86,8 @@ void Projectile::Update(float DeltaTime)
 Player::Player()
 {
     m_Data = new EData(vec2(400.f, 750.f), vec2(60.f, 60.f));
-    ltex_t* PlayerTex = Sprite::loadImage("data/player.png");
-    m_Sprite = new Sprite(PlayerTex, m_Data, 1, 1, 1, Color::White());
-    m_Collider = Collider::CreateCollider(COLLISION_RECT, PlayerTex, m_Data);
+    m_Sprite = new Sprite(World::GetWorld()->PlayerTex, m_Data, 1, 1, 1, Color::White());
+    m_Collider = Collider::CreateCollider(COLLISION_RECT, World::GetWorld()->PlayerTex, m_Data);
     m_Movement = new PlayerMovement(this, m_Data);
     m_Projectiles = new Queue<Projectile>();
 }
@@ -161,9 +159,8 @@ Enemy::Enemy(vec2* _inputVector, Controller* _owner,vec2 _location, Enemy* _next
     m_Owner->AddEnemy(this);
     
     m_Data = new EData(_location, _size);
-    ltex_t* PlayerTex = Sprite::loadImage("data/rect.png");
-    m_Sprite = new Sprite(PlayerTex, m_Data, 1, 1, 1, Color::White());
-    m_Collider = Collider::CreateCollider(COLLISION_RECT, PlayerTex, m_Data);
+    m_Sprite = new Sprite(World::GetWorld()->EnemyTex, m_Data, 1, 1, 1, Color::White());
+    m_Collider = Collider::CreateCollider(COLLISION_RECT, World::GetWorld()->EnemyTex, m_Data);
     m_Movement = new EnemyMovement(this, m_Data, _inputVector);
 
     m_CanShoot = _canShoot;
@@ -255,6 +252,5 @@ void Barrier::Update(float DeltaTime)
     }
     m_Sprite->update(DeltaTime);
 }
-
 
 #pragma endregion

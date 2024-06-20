@@ -5,6 +5,7 @@
 
 #include "litegfx.h"
 #include "Vec2.h"
+#include "Components/Sprite.h"
 
 
 class Barrier;
@@ -57,14 +58,23 @@ public:
     GLFWwindow* m_Window;
     float const Height = 800.f;
     float const Width = 800.f;
+
     
+    ltex_t* PlayerTex = nullptr;
+    ltex_t* EnemyTex = nullptr;
+    ltex_t* ProjectileTex = nullptr;
+    ltex_t* ExplosionTex = nullptr;
+    ltex_t* Health = nullptr;
+
+
 public:
     static World* GetWorld();
     void Update(float DeltaTime);
 
-private:
+public:
     void Init();
     void EndGame(bool _hasWon);
-
+    
+    
     
 };

@@ -41,7 +41,6 @@ int main() {
 	glfwInit();
 	
 	World* manager = World::GetWorld();
-	player = manager->MyPlayer;
 	
 	const char* title = "P2_Gonzalo_Valenti";
 	
@@ -49,6 +48,17 @@ int main() {
 	glfwMakeContextCurrent(window);
 	lgfx_setup2d(static_cast<int>(manager->Width), static_cast<int>(manager->Height));
 	manager->m_Window = window;
+	
+	manager->PlayerTex = Sprite::loadImage("data/player.png");
+	manager->EnemyTex = Sprite::loadImage("data/enemy.png");
+	manager->ProjectileTex = Sprite::loadImage("data/bullet.png");
+	manager->ExplosionTex = Sprite::loadImage("data/explosion.png");
+	manager->Health = Sprite::loadImage("data/player.png");
+
+
+
+	manager->Init();
+	player = manager->MyPlayer;
 	
 	double time = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
@@ -60,7 +70,6 @@ int main() {
 
 		PlayersInput(window);
 		manager->Update(static_cast<float>(DeltaTime));
-
 		//glfwSetWindowTitle(window, ("Mouse: (" + std::to_string(player->m_Movement->m_Direction.x) + ", "+ std::to_string(player->m_Movement->m_Direction.y) + ")").c_str());
 		
 		glfwSwapBuffers(window);

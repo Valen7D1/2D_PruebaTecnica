@@ -13,7 +13,6 @@ World* World::GetWorld()
     if (instance == nullptr)
     {
         instance = new World();
-        instance->Init();
     }
     return instance;
 }

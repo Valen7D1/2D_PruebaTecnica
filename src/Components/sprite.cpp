@@ -13,7 +13,6 @@ void Color::SetColor()
 
 Sprite::~Sprite()
 {
-    delete m_Texture;
 }
 
 
